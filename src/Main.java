@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        Participant p1 = new Participant("Alice", 22);
+        Participant p1 = new Participant("Alice", 21);
         Participant p2 = new Participant("Bob", 28);
 
         Event meeting = new Event("Tech Talk", 15.5, true);
