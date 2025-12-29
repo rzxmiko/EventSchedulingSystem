@@ -5,7 +5,7 @@ public class Main {
 
         manager.addParticipant(new Participant("Alice", 21));
         manager.addParticipant(new Participant("Bob", 28));
-        manager.addParticipant(new Participant("Charlie", 20));
+        manager.addParticipant(new Participant("Charlie", 17)); // Для теста фильтра
 
         System.out.println("--- All ---");
         manager.printAll();
@@ -16,5 +16,9 @@ public class Main {
 
         System.out.println("\n--- Search ---");
         manager.findByName("Alice");
+
+        // --- ДОБАВЛЕН ВЫЗОВ ФИЛЬТРАЦИИ ---
+        System.out.println("\n--- Filtering: Adults Only (18+) ---");
+        manager.filterByAge(18);
     }
 }

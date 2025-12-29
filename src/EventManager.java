@@ -17,6 +17,14 @@ public class EventManager {
         }
     }
 
+    public void filterByAge(int minAge) {
+        for (Participant p : participants) {
+            if (p.getAge() >= minAge) {
+                System.out.println(p);
+            }
+        }
+    }
+
     public void printAll() {
         for (Participant p : participants) {
             System.out.println(p);
