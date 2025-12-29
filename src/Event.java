@@ -1,3 +1,4 @@
+import java.util.*;
 public class Event {
     private String title;
     private double price;
@@ -9,31 +10,23 @@ public class Event {
         this.isOnline = isOnline;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitle() { return title; }
+
+    @Override
+    public String toString() {
+        return "Event: " + title + " ($" + price + ")";
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Double.compare(event.price, price) == 0 && Objects.equals(title, event.title);
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public boolean isOnline() {
-        return isOnline;
-    }
-
-    public void setOnline(boolean online) {
-        isOnline = online;
-    }
-
-    public void printInfo() {
-        System.out.println("Event: " + title + ", Price: $" + price + ", Online: " + isOnline);
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, price);
     }
 }
