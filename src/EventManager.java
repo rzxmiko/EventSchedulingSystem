@@ -1,32 +1,34 @@
 import java.util.*;
-public class Event {
-    private String title;
-    private double price;
+public class EventManager {
+    private List<Participant> participants = new ArrayList<>();
 
-    public Event(String title, double price) {
-        this.title = title;
-        this.price = price;
+    public void addParticipant(Participant p) {
+        participants.add(p);
     }
 
-    @Override
-    public String toString() {
-        return "Event: " + title + " ($" + price + ")";
+    public void sortByAge() {
+        participants.sort(Comparator.comparingInt(Participant::getAge));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+    public void findByName(String name) {
+        for (Participant p : participants) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                System.out.println("Found: " + p);
+            }
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Event event = (Event) o;
-        return Double.compare(event.price, price) == 0 && Objects.equals(title, event.title);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, price);
+    public void filterByAge(int minAge) {
+        for (Participant p : participants) {
+            if (p.getAge() >= minAge) {
+                System.out.println(p);
+            }
+        }
+    }
+
+    public void printAll() {
+        for (Participant p : participants) {
+            System.out.println(p);
+        }
     }
 }
