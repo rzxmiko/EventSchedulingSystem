@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Objects;
 public class Organizer extends Person {
     private int experience;
 
@@ -13,6 +13,20 @@ public class Organizer extends Person {
 
     @Override
     public String toString() {
-        return super.toString() + ", Experience: " + experience + " years";
+        return super.toString() + ", Experience: " + experience;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!super.equals(o)) {
+            return false;
+        }
+        Organizer organizer = (Organizer) o;
+        return experience == organizer.experience;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), experience);
     }
 }

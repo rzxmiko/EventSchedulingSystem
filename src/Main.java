@@ -1,24 +1,22 @@
-import java.util.*;
 public class Main {
     public static void main(String[] args) {
         EventManager manager = new EventManager();
 
         manager.addParticipant(new Participant("Alice", 21));
         manager.addParticipant(new Participant("Bob", 28));
-        manager.addParticipant(new Participant("Charlie", 17)); // Для теста фильтра
+        manager.addParticipant(new Participant("Charlie", 17));
 
-        System.out.println("--- All ---");
+        System.out.println("All");
         manager.printAll();
 
-        System.out.println("\n--- Sorted ---");
+        System.out.println("\nSorted by Age");
         manager.sortByAge();
         manager.printAll();
 
-        System.out.println("\n--- Search ---");
+        System.out.println("\nSearch");
         manager.findByName("Alice");
 
-        // --- ДОБАВЛЕН ВЫЗОВ ФИЛЬТРАЦИИ ---
-        System.out.println("\n--- Filtering: Adults Only (18+) ---");
+        System.out.println("\nFilter 18+");
         manager.filterByAge(18);
     }
 }
