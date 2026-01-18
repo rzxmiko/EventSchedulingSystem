@@ -23,8 +23,22 @@ public class Main {
                 ResultSet rs = statement.executeQuery(SQL_SELECT);
 
                 while (rs.next()) {
-                    System.out.println("Id: " + rs.getInt("id") + "Name: " + rs.getString("name") + " Age: " + rs.getInt("age"));
+                    System.out.println("Id: " + rs.getInt("id") + " Name: " + rs.getString("name") + " Age: " + rs.getInt("age"));
                 }
+            }
+            else if(command == 2){
+                System.out.print("Введите id участника:");
+                int id = scanner.nextInt();
+                System.out.print("Введите новый возраст: ");
+                int newAge = scanner.nextInt();
+
+                String SQL_INSERT = "insert into participants(name,age) values ('Dariya',20)";
+                PreparedStatement pstmt = connection.prepareStatement(SQL_INSERT);
+                pstmt.setInt(1, newAge);
+                pstmt.setInt(2,id);
+                pstmt.executeUpdate();
+
+
             }
         }
     }
