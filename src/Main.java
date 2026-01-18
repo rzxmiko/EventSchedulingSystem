@@ -61,7 +61,6 @@ public class Main {
             }
             else if (command == 5){
                 connection.close();
-                break;
             }
         }
     }
