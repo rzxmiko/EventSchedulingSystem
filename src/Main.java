@@ -14,7 +14,7 @@ public class Main {
             System.out.println("2. Изменить данные участников");
             System.out.println("3. Создать нового участника");
             System.out.println("4. Удалить участника");
-            System.out.println("4. Выйти");
+            System.out.println("5. Выйти");
             int command = scanner.nextInt();
 
             if (command == 1) {
@@ -37,8 +37,27 @@ public class Main {
                 pstmt.setInt(1, newAge);
                 pstmt.setInt(2,id);
                 pstmt.executeUpdate();
+            }
+            else if(command == 3){
+                System.out.println("Введите имя: ");
+                String name = scanner.next();
+                System.out.println("Введите возраст: ");
+                int age = scanner.nextInt();
 
+                String SQL_INSERT = "insert into participants(name, age) values (?,?)";
+                PreparedStatement pstmt = connection.prepareStatement(SQL_INSERT);
+                pstmt.setString(1,name);
+                pstmt.setInt(2,age);
+                pstmt.executeUpdate();
+            }
+            else if(command == 4){
+                System.out.println("Введите id участника для удаления: ");
+                int id = scanner.nextInt();
 
+                String SQL_DELETE = "delete from participants where id = ?";
+                PreparedStatement pstmt = connection.prepareStatement(SQL_DELETE);
+                pstmt.setInt(1,id);
+                pstmt.executeUpdate();
             }
         }
     }
