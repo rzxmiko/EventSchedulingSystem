@@ -59,6 +59,10 @@ public class Main {
                 pstmt.setInt(1,id);
                 pstmt.executeUpdate();
             }
+            else if (command == 5){
+                connection.close();
+                break;
+            }
         }
     }
 }
