@@ -1,22 +1,15 @@
+import java.sql.*;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        EventManager manager = new EventManager();
-
-        manager.addParticipant(new Participant("Alice", 21));
-        manager.addParticipant(new Participant("Bob", 28));
-        manager.addParticipant(new Participant("Charlie", 17));
-
-        System.out.println("All");
-        manager.printAll();
-
-        System.out.println("\nSorted by Age");
-        manager.sortByAge();
-        manager.printAll();
-
-        System.out.println("\nSearch");
-        manager.findByName("Alice");
-
-        System.out.println("\nFilter 18+");
-        manager.filterByAge(18);
+        Scanner scanner = new Scanner(System.in);
+        while (true){
+            System.out.println("1. Показать список всех задач");
+            System.out.println("2. Выполнить задачу");
+            System.out.println("3. Создать задачу");
+            System.out.println("4. Выйти");
+            int command = scanner.nextInt();
+        }
     }
 }
