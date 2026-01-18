@@ -32,8 +32,8 @@ public class Main {
                 System.out.print("Введите новый возраст: ");
                 int newAge = scanner.nextInt();
 
-                String SQL_INSERT = "insert into participants(name,age) values ('Dariya',20)";
-                PreparedStatement pstmt = connection.prepareStatement(SQL_INSERT);
+                String SQL_UPDATE = "update participants set age = ? where id = ?";
+                PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE);
                 pstmt.setInt(1, newAge);
                 pstmt.setInt(2,id);
                 pstmt.executeUpdate();
