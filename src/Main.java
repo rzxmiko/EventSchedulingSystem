@@ -17,13 +17,14 @@ public class Main {
             System.out.println("4. Выйти");
             int command = scanner.nextInt();
 
-            if (command == 1){
+            if (command == 1) {
                 Statement statement = connection.createStatement();
                 String SQL_SELECT = "SELECT * FROM participants";
                 ResultSet rs = statement.executeQuery(SQL_SELECT);
 
                 while (rs.next()) {
                     System.out.println("Id: " + rs.getInt("id") + "Name: " + rs.getString("name") + " Age: " + rs.getInt("age"));
+                }
             }
         }
     }
