@@ -1,34 +1,31 @@
-import java.util.*;
+import java.util.List;
+import java.util.Comparator;
 public class EventManager {
-    private List<Participant> participants = new ArrayList<>();
+    private ParticipantRepository repository;
+    private SortStrategy sortStrategy;
 
-    public void addParticipant(Participant p) {
-        participants.add(p);
+    public EventManager(ParticipantRepository repository, SortStrategy sortStrategy) {
+        this.repository = repository;
+        this.sortStrategy = sortStrategy;
     }
 
-    public void sortByAge() {
-        participants.sort(Comparator.comparingInt(Participant::getAge));
-    }
-
-    public void findByName(String name) {
-        for (Participant p : participants) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                System.out.println("Found: " + p);
-            }
+    public void printAllParticipants() throws SQLException {
+        List<Participant> participants = repository.getAllParticipants();
+        sortStrategy.sort(participants); // Использование стратегии сортировки
+        for (Participant participant : participants) {
+            System.out.println(participant);
         }
     }
 
-    public void filterByAge(int minAge) {
-        for (Participant p : participants) {
-            if (p.getAge() >= minAge) {
-                System.out.println(p);
-            }
-        }
+    public void addParticipant(Participant participant) throws SQLException {
+        repository.addParticipant(participant);
     }
 
-    public void printAll() {
-        for (Participant p : participants) {
-            System.out.println(p);
-        }
+    public void updateParticipantAge(int id, int newAge) throws SQLException {
+        repository.updateParticipantAge(id, newAge);
+    }
+
+    public void deleteParticipant(int id) throws SQLException {
+        repository.deleteParticipant(id);
     }
 }
