@@ -1,34 +1,34 @@
-public class ParticipantRepository {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class ParticipantDAO {
     private Connection connection;
 
-    public ParticipantRepository(Connection connection) {
+    public ParticipantDAO(Connection connection) {
         this.connection = connection;
     }
 
-    public List<Participant> getAllParticipants() throws SQLException {
-        Statement statement = connection.createStatement();
+    public void showParticipants() throws SQLException {
         String SQL_SELECT = "SELECT * FROM participants";
-        ResultSet rs = statement.executeQuery(SQL_SELECT);
+        PreparedStatement pstmt = connection.prepareStatement(SQL_SELECT);
+        ResultSet rs = pstmt.executeQuery();
 
-        List<Participant> participants = new ArrayList<>();
         while (rs.next()) {
-            int id = rs.getInt("id");
-            String name = rs.getString("name");
-            int age = rs.getInt("age");
-            participants.add(new Participant(name, age));
+            System.out.println("Id: " + rs.getInt("id") + " Name: " + rs.getString("name") + " Age: " + rs.getInt("age"));
         }
-        return participants;
     }
 
-    public void addParticipant(Participant participant) throws SQLException {
+    public void createParticipant(String name, int age) throws SQLException {
         String SQL_INSERT = "INSERT INTO participants(name, age) VALUES (?, ?)";
         PreparedStatement pstmt = connection.prepareStatement(SQL_INSERT);
-        pstmt.setString(1, participant.getName());
-        pstmt.setInt(2, participant.getAge());
+        pstmt.setString(1, name);
+        pstmt.setInt(2, age);
         pstmt.executeUpdate();
     }
 
-    public void updateParticipantAge(int id, int newAge) throws SQLException {
+    public void updateParticipant(int id, int newAge) throws SQLException {
         String SQL_UPDATE = "UPDATE participants SET age = ? WHERE id = ?";
         PreparedStatement pstmt = connection.prepareStatement(SQL_UPDATE);
         pstmt.setInt(1, newAge);
