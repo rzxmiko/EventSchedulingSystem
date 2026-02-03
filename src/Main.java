@@ -42,6 +42,6 @@ public class Main {
         EventDAO eventDAO = new EventDAO(DatabaseUtils.getConnection());
         EventService eventService = new EventService(eventDAO);
         Main app = new Main(userInterface, eventService);
-        app.run();  // Запуск программы
+        app.run();
     }
 }

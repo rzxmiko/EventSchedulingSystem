@@ -1,6 +1,8 @@
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventDAO {
     private Connection connection;
@@ -9,24 +11,39 @@ public class EventDAO {
         this.connection = connection;
     }
 
-    public void createEvent(String eventName, String eventDate) throws SQLException {
-        // Проверяем формат даты
+    public void createEvent(String eventName, String eventDate, int organizerId) throws SQLException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date parsedDate;
         try {
-            parsedDate = sdf.parse(eventDate); // Преобразуем строку в java.util.Date
+            parsedDate = sdf.parse(eventDate);
         } catch (ParseException e) {
             throw new IllegalArgumentException("Неверный формат даты. Ожидается формат: YYYY-MM-DD");
         }
 
-        // Преобразуем java.util.Date в java.sql.Date
         Date sqlDate = new Date(parsedDate.getTime());
 
-        String SQL_INSERT = "INSERT INTO events(event_name, event_date) VALUES (?, ?)";
+        String SQL_INSERT = "INSERT INTO events(event_name, event_date, organizer_id) VALUES (?, ?, ?)";
         PreparedStatement pstmt = connection.prepareStatement(SQL_INSERT);
         pstmt.setString(1, eventName);
-        pstmt.setDate(2, sqlDate);  // Используем объект java.sql.Date
+        pstmt.setDate(2, sqlDate);
+        pstmt.setInt(3, organizerId);
         pstmt.executeUpdate();
+    }
+
+    public List<Organizer> getAllOrganizers() throws SQLException {
+        List<Organizer> organizers = new ArrayList<>();
+        String SQL_SELECT = "SELECT * FROM organizers";
+        PreparedStatement pstmt = connection.prepareStatement(SQL_SELECT);
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            int experience = rs.getInt("experience");
+            organizers.add(new Organizer(name, experience));
+        }
+
+        return organizers;
     }
 
     public void showEvents() throws SQLException {
@@ -40,16 +57,14 @@ public class EventDAO {
     }
 
     public void updateEvent(int eventId, String newEventName, String newEventDate) throws SQLException {
-        // Проверка даты
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date parsedDate;
         try {
-            parsedDate = sdf.parse(newEventDate); // Преобразуем строку в java.util.Date
+            parsedDate = sdf.parse(newEventDate);
         } catch (ParseException e) {
             throw new IllegalArgumentException("Неверный формат даты. Ожидается формат: YYYY-MM-DD");
         }
 
-        // Преобразуем в java.sql.Date
         Date sqlDate = new Date(parsedDate.getTime());
 
         String SQL_UPDATE = "UPDATE events SET event_name = ?, event_date = ? WHERE id = ?";
