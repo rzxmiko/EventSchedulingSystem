@@ -9,15 +9,23 @@ public class ConsoleUserInterface implements UserInterface {
 
     @Override
     public void showMenu() {
-        System.out.println("1. Показать список участников");
-        System.out.println("2. Изменить данные участника");
-        System.out.println("3. Создать нового участника");
-        System.out.println("4. Удалить участника");
-        System.out.println("5. Выход");
+        System.out.println("1. Просмотр всех событий");
+        System.out.println("2. Обновить данные события");
+        System.out.println("3. Создать новое событие");
+        System.out.println("4. Удалить событие");
+        System.out.println("5. Выход из программы");
     }
 
     @Override
     public int getUserChoice() {
         return scanner.nextInt();
+    }
+
+    public void displayMessage(String message) {
+        showMessage(message);
+    }
+
+    public void displayHeader(String header) {
+        UserInterface.printHeader(header);
     }
 }

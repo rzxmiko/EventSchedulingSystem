@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.Objects;
+
 public abstract class Person {
     private String name;
 
@@ -17,12 +18,8 @@ public abstract class Person {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
         return Objects.equals(name, person.name);
     }

@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.Objects;
+
 public class Organizer extends Person {
     private int experience;
 
@@ -18,9 +19,7 @@ public class Organizer extends Person {
 
     @Override
     public boolean equals(Object o) {
-        if (!super.equals(o)) {
-            return false;
-        }
+        if (!super.equals(o)) return false;
         Organizer organizer = (Organizer) o;
         return experience == organizer.experience;
     }

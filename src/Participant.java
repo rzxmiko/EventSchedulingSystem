@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.Objects;
+
 public class Participant extends Person {
     private int age;
 
@@ -15,11 +16,10 @@ public class Participant extends Person {
     public String toString() {
         return super.toString() + ", Age: " + age;
     }
+
     @Override
     public boolean equals(Object o) {
-        if (!super.equals(o)) {
-            return false;
-        }
+        if (!super.equals(o)) return false;
         Participant that = (Participant) o;
         return age == that.age;
     }

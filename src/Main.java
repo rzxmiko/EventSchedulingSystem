@@ -1,32 +1,36 @@
 public class Main {
     private UserInterface userInterface;
-    private ParticipantService participantService;
+    private EventService eventService;
 
-    public Main(UserInterface userInterface, ParticipantService participantService) {
+    public Main(UserInterface userInterface, EventService eventService) {
         this.userInterface = userInterface;
-        this.participantService = participantService;
+        this.eventService = eventService;
     }
 
     public void run() throws Exception {
-        while (true) {
+        boolean running = true;
+
+        while (running) {
             userInterface.showMenu();
             int command = userInterface.getUserChoice();
 
             switch (command) {
                 case 1:
-                    participantService.showParticipants();
+                    eventService.showEvents();
                     break;
                 case 2:
-                    participantService.updateParticipant();
+                    eventService.updateEvent();
                     break;
                 case 3:
-                    participantService.createParticipant();
+                    eventService.createEvent();
                     break;
                 case 4:
-                    participantService.deleteParticipant();
+                    eventService.deleteEvent();
                     break;
                 case 5:
-                    return; // Выход
+                    running = false;
+                    System.out.println("Выход из программы.");
+                    break;
                 default:
                     System.out.println("Неверная команда, попробуйте снова.");
             }
@@ -35,9 +39,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         UserInterface userInterface = new ConsoleUserInterface();
-        ParticipantDAO participantDAO = new ParticipantDAO(DatabaseUtils.getConnection());
-        ParticipantService participantService = new ParticipantService(participantDAO);
-        Main app = new Main(userInterface, participantService);
-        app.run();
+        EventDAO eventDAO = new EventDAO(DatabaseUtils.getConnection());
+        EventService eventService = new EventService(eventDAO);
+        Main app = new Main(userInterface, eventService);
+        app.run();  // Запуск программы
     }
 }
