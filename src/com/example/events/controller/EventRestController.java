@@ -34,4 +34,9 @@ public class EventRestController {
     public Event update(@PathVariable Long id, @RequestBody Event event) {
         return eventService.updateEvent(id, event);
     }
+
+    @GetMapping("/filter")
+    public List<Event> filterEvents(@RequestParam Double maxPrice) {
+        return eventService.filterByPrice(maxPrice);
+    }
 }
