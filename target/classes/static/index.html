@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Event Management System</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .filter-section { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .price-tag { font-weight: bold; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📅 Event Scheduling System</h1>
+
+    <div class="filter-section">
+        <input type="number" id="maxPrice" placeholder="Введите макс. цену">
+        <button onclick="applyFilter()">Применить фильтр (Lambda)</button>
+        <button onclick="loadEvents()" style="background:#95a5a6">Сбросить</button>
+    </div>
+
+    <table id="eventTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Организатор</th>
+        </tr>
+        </thead>
+        <tbody id="eventBody">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Функция для загрузки данных с бэкенда
+    async function loadEvents() {
+        const response = await fetch('/api/events');
+        const data = await response.json();
+        renderTable(data);
+    }
+
+    // Функция для фильтрации (вызывает твой новый метод в контроллере)
+    async function applyFilter() {
+        const price = document.getElementById('maxPrice').value;
+        if (!price) return;
+
+        const response = await fetch(`/api/events/filter?maxPrice=${price}`);
+        const data = await response.json();
+        renderTable(data);
+    }
+
+    function renderTable(events) {
+        const body = document.getElementById('eventBody');
+        body.innerHTML = '';
+        events.forEach(event => {
+            body.innerHTML += `
+                <tr>
+                    <td>${event.id}</td>
+                    <td>${event.title}</td>
+                    <td class="price-tag">${event.price} $</td>
+                    <td>${event.organizer ? event.organizer.name : 'N/A'}</td>
+                </tr>
+            `;
+        });
+    }
+
+    // Запускаем при загрузке страницы
+    loadEvents();
+</script>
+
+</body>
+</html>
