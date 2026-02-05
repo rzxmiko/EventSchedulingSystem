@@ -3,7 +3,7 @@
         <mirror>
             <id>central</id>
             <mirrorOf>central</mirrorOf>
-            <url>https://repo.maven.apache.org/maven2</url> <!-- Используем HTTPS вместо HTTP -->
+            <url>https://repo.maven.apache.org/maven2</url> 
         </mirror>
     </mirrors>
 
