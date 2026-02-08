@@ -2,26 +2,31 @@ package com.example.events.controller;
 
 import com.example.events.model.Event;
 import com.example.events.service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity; // ОБЯЗАТЕЛЬНО ДОБАВЬ ЭТОТ ИМПОРТ
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
+@CrossOrigin(origins = "*")
 public class EventRestController {
 
-    private final EventService eventService;
-
-    public EventRestController(EventService eventService) {
-        this.eventService = eventService;
-    }
+    @Autowired
+    private EventService eventService;
 
     @GetMapping
-    public List<Event> getAll() {
+    public List<Event> getAllEvents() {
         return eventService.getAllEvents();
     }
 
+    @GetMapping("/filter")
+    public List<Event> filter(@RequestParam Double maxPrice) {
+        return eventService.filterByPrice(maxPrice);
+    }
+
     @PostMapping
-    public Event createEvent(@RequestBody Event event) {
+    public Event create(@RequestBody Event event) {
         return eventService.saveEvent(event);
     }
 
@@ -31,12 +36,8 @@ public class EventRestController {
     }
 
     @PutMapping("/{id}")
-    public Event update(@PathVariable Long id, @RequestBody Event event) {
-        return eventService.updateEvent(id, event);
-    }
-
-    @GetMapping("/filter")
-    public List<Event> filterEvents(@RequestParam Double maxPrice) {
-        return eventService.filterByPrice(maxPrice);
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event eventDetails) {
+        Event updatedEvent = eventService.updateEvent(id, eventDetails);
+        return ResponseEntity.ok(updatedEvent);
     }
 }

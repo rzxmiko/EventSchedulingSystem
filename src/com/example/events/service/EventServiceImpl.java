@@ -1,15 +1,21 @@
 package com.example.events.service;
-import com.example.events.factory.EventFactory;
+
 import com.example.events.model.Event;
 import com.example.events.repository.EventRepository;
+import com.example.events.exception.EventNotFoundException;
+import com.example.events.exception.InvalidEventDataException;
+import com.example.events.factory.EventFactory;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
 
+
     private final EventRepository eventRepository;
+
 
     public EventServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -22,6 +28,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event saveEvent(Event event) {
+        if (event.getTitle() == null || event.getTitle().isEmpty()) {
+            throw new InvalidEventDataException("Event title cannot be empty!");
+        }
         Event newEvent = EventFactory.createEvent(
                 event.getTitle(),
                 event.getPrice(),
@@ -32,6 +41,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteEvent(Long id) {
+        if (!eventRepository.existsById(id)) {
+            throw new EventNotFoundException(id);
+        }
         eventRepository.deleteById(id);
     }
 
@@ -39,11 +51,11 @@ public class EventServiceImpl implements EventService {
     public Event updateEvent(Long id, Event updatedEvent) {
         return eventRepository.findById(id)
                 .map(existingEvent -> {
-                    if (updatedEvent.getTitle() != null) existingEvent.setTitle(updatedEvent.getTitle());
-                    if (updatedEvent.getPrice() != null) existingEvent.setPrice(updatedEvent.getPrice());
+                    existingEvent.setTitle(updatedEvent.getTitle());
+                    existingEvent.setPrice(updatedEvent.getPrice());
                     return eventRepository.save(existingEvent);
                 })
-                .orElseThrow(() -> new RuntimeException("Event not found with id " + id));
+                .orElseThrow(() -> new EventNotFoundException(id));
     }
 
     @Override

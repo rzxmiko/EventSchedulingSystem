@@ -2,122 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Event System Dashboard</title>
+    <title>Event Scheduling System</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1, h2 { color: #2c3e50; text-align: center; }
-        .form-section { background: #eef2f3; padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .filter-section { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
-        input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        button { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-add { background: #27ae60; color: white; }
-        .btn-filter { background: #3498db; color: white; }
-        .btn-delete { background: #e74c3c; color: white; padding: 5px 10px; }
+        body { font-family: sans-serif; margin: 40px; background-color: #f4f4f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        .form-section { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; background: #28a745; color: white; }
+        button.delete { background: #dc3545; }
         button:hover { opacity: 0.8; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background-color: #f8f9fa; }
-        .price-tag { font-weight: bold; color: #2ecc71; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>📅 Event Scheduling System</h1>
+<h2>📅 Event Scheduling System</h2>
 
-    <div class="form-section">
-        <h2>Add New Event</h2>
-        <input type="text" id="newTitle" placeholder="Event Title">
-        <input type="number" id="newPrice" placeholder="Price">
-        <input type="number" id="newOrgId" placeholder="Organizer ID (1, 2...)">
-        <button class="btn-add" onclick="createEvent()">➕ Create Event (Factory)</button>
-    </div>
-
-    <div class="filter-section">
-        <input type="number" id="maxPrice" placeholder="Max Price Limit">
-        <button class="btn-filter" onclick="applyFilter()">🔍 Filter (Lambda)</button>
-        <button onclick="loadEvents()" style="background:#bdc3c7">Reset</button>
-    </div>
-
-    <table id="eventTable">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Price</th>
-            <th>Organizer ID</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="eventBody"></tbody>
-    </table>
+<div class="form-section">
+    <h3>Create New Event</h3>
+    <input type="text" id="title" placeholder="Event Title">
+    <input type="number" id="price" placeholder="Price">
+    <input type="number" id="orgId" placeholder="Organizer ID">
+    <button onclick="addNewEvent()">Add Event</button>
 </div>
 
-<script>
-    const API_URL = '/api/events';
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Organizer ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="eventBody"></tbody>
+</table>
 
-    // 1. GET ALL
+<script>
+    const API = "/api/events";
+
     async function loadEvents() {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        renderTable(data);
+        const res = await fetch(API);
+        const events = await res.json();
+        const tbody = document.getElementById('eventBody');
+        tbody.innerHTML = '';
+
+        events.forEach(event => {
+            tbody.innerHTML += `
+                    <tr>
+                        <td>${event.id}</td>
+                        <td>${event.title}</td>
+                        <td>${event.price}</td>
+                        <td>${event.organizer ? event.organizer.id : 'N/A'}</td>
+                        <td>
+                            <button class="delete" onclick="deleteEvent(${event.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+        });
     }
 
-    // 2. POST (CREATE)
-    async function createEvent() {
-        const eventData = {
-            title: document.getElementById('newTitle').value,
-            price: parseFloat(document.getElementById('newPrice').value),
-            organizer: { id: parseInt(document.getElementById('newOrgId').value) }
+    async function addNewEvent() {
+        const title = document.getElementById('title').value;
+        const price = document.getElementById('price').value;
+        const orgId = document.getElementById('orgId').value;
+
+        if (!title || !price || !orgId) {
+            alert("Please fill all fields!");
+            return;
+        }
+
+        const payload = {
+            title: title,
+            price: parseFloat(price),
+            organizer: { id: parseInt(orgId) }
         };
 
-        const response = await fetch(API_URL, {
+        const res = await fetch(API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(eventData)
+            body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-            alert('Event created successfully!');
-            loadEvents(); // Обновляем таблицу
+        if (res.ok) {
+            loadEvents();
+            document.getElementById('title').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('orgId').value = '';
         } else {
-            alert('Error! Check if Organizer ID exists.');
+            alert("Error! Check if Organizer ID exists.");
         }
     }
 
-    // 3. DELETE
     async function deleteEvent(id) {
-        if (confirm('Delete this event?')) {
-            await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (confirm("Are you sure?")) {
+            await fetch(`${API}/${id}`, { method: 'DELETE' });
             loadEvents();
         }
-    }
-
-    // 4. FILTER (LAMBDA)
-    async function applyFilter() {
-        const price = document.getElementById('maxPrice').value;
-        const response = await fetch(`${API_URL}/filter?maxPrice=${price}`);
-        const data = await response.json();
-        renderTable(data);
-    }
-
-    function renderTable(events) {
-        const body = document.getElementById('eventBody');
-        body.innerHTML = '';
-        events.forEach(event => {
-            body.innerHTML += `
-                <tr>
-                    <td>${event.id}</td>
-                    <td>${event.title}</td>
-                    <td class="price-tag">${event.price} $</td>
-                    <td>${event.organizer ? event.organizer.id : 'N/A'}</td>
-                    <td>
-                        <button class="btn-delete" onclick="deleteEvent(${event.id})">🗑️ Delete</button>
-                    </td>
-                </tr>
-            `;
-        });
     }
 
     loadEvents();
