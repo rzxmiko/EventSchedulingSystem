@@ -3,7 +3,7 @@ package com.example.events.controller;
 import com.example.events.model.Event;
 import com.example.events.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity; // ОБЯЗАТЕЛЬНО ДОБАВЬ ЭТОТ ИМПОРТ
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

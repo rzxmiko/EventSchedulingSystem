@@ -1,6 +1,7 @@
 package com.example.events.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -11,6 +12,7 @@ public class Event {
     private Long id;
     private String title;
     private Double price;
+    private LocalDate eventDate;
 
     @ManyToOne
     @JoinColumn(name = "organizer_id")
@@ -18,9 +20,10 @@ public class Event {
 
     public Event() {}
 
-    public Event(String title, Double price, Organizer organizer) {
+    public Event(String title, Double price, LocalDate eventDate, Organizer organizer) {
         this.title = title;
         setPrice(price);
+        this.eventDate = eventDate;
         this.organizer = organizer;
     }
 
@@ -40,6 +43,9 @@ public class Event {
         this.price = price;
     }
 
+    public LocalDate getEventDate() { return eventDate; }
+    public void setEventDate(LocalDate eventDate) { this.eventDate = eventDate; }
+
     public Organizer getOrganizer() { return organizer; }
     public void setOrganizer(Organizer organizer) { this.organizer = organizer; }
 
@@ -49,6 +55,7 @@ public class Event {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", price=" + price +
+                ", eventDate=" + eventDate +
                 '}';
     }
 
@@ -68,6 +75,7 @@ public class Event {
     public static class EventBuilder {
         private String title;
         private Double price;
+        private LocalDate eventDate;
         private Organizer organizer;
 
         public EventBuilder title(String title) {
@@ -80,13 +88,18 @@ public class Event {
             return this;
         }
 
+        public EventBuilder eventDate(LocalDate eventDate) {
+            this.eventDate = eventDate;
+            return this;
+        }
+
         public EventBuilder organizer(Organizer organizer) {
             this.organizer = organizer;
             return this;
         }
 
         public Event build() {
-            return new Event(title, price, organizer);
+            return new Event(title, price, eventDate, organizer);
         }
     }
 }

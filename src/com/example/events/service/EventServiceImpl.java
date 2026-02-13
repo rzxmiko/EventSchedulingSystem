@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class EventServiceImpl implements EventService {
 
-
     private final EventRepository eventRepository;
-
 
     public EventServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -34,6 +32,7 @@ public class EventServiceImpl implements EventService {
         Event newEvent = EventFactory.createEvent(
                 event.getTitle(),
                 event.getPrice(),
+                event.getEventDate(),
                 event.getOrganizer()
         );
         return eventRepository.save(newEvent);
@@ -53,6 +52,7 @@ public class EventServiceImpl implements EventService {
                 .map(existingEvent -> {
                     existingEvent.setTitle(updatedEvent.getTitle());
                     existingEvent.setPrice(updatedEvent.getPrice());
+                    existingEvent.setEventDate(updatedEvent.getEventDate());
                     return eventRepository.save(existingEvent);
                 })
                 .orElseThrow(() -> new EventNotFoundException(id));
